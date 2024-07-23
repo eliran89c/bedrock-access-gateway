@@ -133,19 +133,19 @@ class BedrockModel(BaseChatModel):
             "tool_call": False,
             "stream_tool_call": False,
         },
-        "meta.llama3-1-8b-instruct-v1": {
+        "meta.llama3-1-8b-instruct-v1:0": {
             "system": True,
             "multimodal": False,
             "tool_call": True,
             "stream_tool_call": True,
         },
-        "meta.llama3-1-70b-instruct-v1": {
+        "meta.llama3-1-70b-instruct-v1:0": {
             "system": True,
             "multimodal": False,
             "tool_call": True,
             "stream_tool_call": True,
         },
-        "meta.llama3-1-405b-instruct-v1": {
+        "meta.llama3-1-405b-instruct-v1:0": {
             "system": True,
             "multimodal": False,
             "tool_call": True,
