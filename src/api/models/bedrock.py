@@ -42,11 +42,6 @@ from api.setting import DEBUG, AWS_REGION
 
 logger = logging.getLogger(__name__)
 
-bedrock_runtime = boto3.client(
-    service_name="bedrock-runtime",
-    region_name=AWS_REGION,
-)
-
 SUPPORTED_BEDROCK_EMBEDDING_MODELS = {
     "cohere.embed-multilingual-v3": "Cohere Embed Multilingual",
     "cohere.embed-english-v3": "Cohere Embed English",
@@ -138,6 +133,24 @@ class BedrockModel(BaseChatModel):
             "tool_call": False,
             "stream_tool_call": False,
         },
+        "meta.llama3-1-8b-instruct-v1": {
+            "system": True,
+            "multimodal": False,
+            "tool_call": True,
+            "stream_tool_call": True,
+        },
+        "meta.llama3-1-70b-instruct-v1": {
+            "system": True,
+            "multimodal": False,
+            "tool_call": True,
+            "stream_tool_call": True,
+        },
+        "meta.llama3-1-405b-instruct-v1": {
+            "system": True,
+            "multimodal": False,
+            "tool_call": True,
+            "stream_tool_call": True,
+        },
         "mistral.mistral-7b-instruct-v0:2": {
             "system": False,
             "multimodal": False,
@@ -201,6 +214,12 @@ class BedrockModel(BaseChatModel):
         """Common logic for invoking bedrock models"""
         if DEBUG:
             logger.info("Raw request: " + chat_request.model_dump_json())
+
+        # Setting up boto3 session
+        bedrock_runtime = boto3.client(
+            service_name="bedrock-runtime",
+            region_name=AWS_REGION,
+        )
 
         # Convert OpenAI chat request to Bedrock SDK request
         args = self._parse_request(chat_request)
@@ -694,6 +713,13 @@ class BedrockEmbeddingsModel(BaseEmbeddingsModel, ABC):
 
     async def _invoke_model(self, args: dict, model_id: str):
         body = json.dumps(args)
+
+        # Setting up boto3 session
+        bedrock_runtime = boto3.client(
+            service_name="bedrock-runtime",
+            region_name=AWS_REGION,
+        )
+        
         if DEBUG:
             logger.info("Invoke Bedrock Model: " + model_id)
             logger.info("Bedrock request body: " + body)
