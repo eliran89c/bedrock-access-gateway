@@ -52,6 +52,12 @@ SUPPORTED_BEDROCK_EMBEDDING_MODELS = {
 
 ENCODER = tiktoken.get_encoding("cl100k_base")
 
+# Setting up boto3 session
+bedrock_runtime = boto3.client(
+    service_name="bedrock-runtime",
+    region_name=AWS_REGION,
+)
+
 async def run_in_executor(func, **args):
     """Run a function in an executor."""
     loop = asyncio.get_event_loop()
@@ -214,12 +220,6 @@ class BedrockModel(BaseChatModel):
         """Common logic for invoking bedrock models"""
         if DEBUG:
             logger.info("Raw request: " + chat_request.model_dump_json())
-
-        # Setting up boto3 session
-        bedrock_runtime = boto3.client(
-            service_name="bedrock-runtime",
-            region_name=AWS_REGION,
-        )
 
         # Convert OpenAI chat request to Bedrock SDK request
         args = self._parse_request(chat_request)
@@ -713,12 +713,6 @@ class BedrockEmbeddingsModel(BaseEmbeddingsModel, ABC):
 
     async def _invoke_model(self, args: dict, model_id: str):
         body = json.dumps(args)
-
-        # Setting up boto3 session
-        bedrock_runtime = boto3.client(
-            service_name="bedrock-runtime",
-            region_name=AWS_REGION,
-        )
         
         if DEBUG:
             logger.info("Invoke Bedrock Model: " + model_id)
